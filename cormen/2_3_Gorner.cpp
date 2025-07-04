@@ -3,8 +3,32 @@
 
 #include "common.h"
 
-
+/**
+ * Polynome has a following view:
+ *  v[0] + x*v[1] + x**2 * v[2] + ... + x**n * v[n], where n = v.size() - 1
+ */
 using polynome = std::vector<double>;
+
+/**
+ * Calculate value of polynome in `x` using inductive approach.
+ *
+ * Time complexity: O(n) (theta of n).
+ * Memory complexity: O(1).
+ * 
+ * @param p Const reference to polynome (vector of doubles).
+ * @param x Point in which polynome is calculated.
+ * @return calculated value.
+ */
+double calculate(const polynome& p, const double x) {
+    double pow_x  = 1,
+           result = 0;
+    for (int i = 0; i < p.size(); ++i) {
+        result += pow_x * p[i];
+        pow_x *= x;
+    }
+
+    return result;
+}
 
 /**
  * Calculate value of polynome in `x` using Gorner algorithm.
