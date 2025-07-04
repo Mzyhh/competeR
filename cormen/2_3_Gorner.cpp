@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include "common.h"
 
@@ -19,8 +20,8 @@ using polynome = std::vector<double>;
  * @param x Point in which polynome is calculated.
  * @return calculated value.
  */
-double calculate(const polynome& p, const double x) {
-    double pow_x  = 1,
+long double calculate(const polynome& p, const double x) {
+    long double pow_x  = 1,
            result = 0;
     for (int i = 0; i < p.size(); ++i) {
         result += pow_x * p[i];
@@ -40,8 +41,8 @@ double calculate(const polynome& p, const double x) {
  * @param x Point in which polynome is calculated.
  * @return calculated value.
  */
-double gorner(const polynome& p, const double x) {
-    double y = 0;
+long double gorner(const polynome& p, const double x) {
+    long double y = 0;
     for (int i = p.size() - 1; i >= 0; --i)
         y = p[i] + x * y;
     return y;
@@ -55,6 +56,21 @@ int main(int argc, char* argv[]) {
     int n = argc - 2;
     polynome arr = cad(argv + 1, n);
     double value = atof(argv[argc - 1]);
-    std::cout << "Result is " << gorner(arr, value) << ".\n";
+    std::chrono::steady_clock::time_point begin, end;
+    
+    begin = std::chrono::steady_clock::now();
+    long double result1 = gorner(arr, value);
+    end = std::chrono::steady_clock::now();
+    std::cout << "Gorner time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << std::endl;
+
+    begin = std::chrono::steady_clock::now();
+    long double result2 = calculate(arr, value);
+    end = std::chrono::steady_clock::now();
+    std::cout << "Inductive time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << std::endl;
+
+    if (result1 != result2)
+        std::cout << "Hmmm... Results are different.\n" << result1 << " vs " << result2 << "\n";
+    else
+        std::cout << "Result is " << result1 << ".\n";
     return 0;
 }
