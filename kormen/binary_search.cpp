@@ -1,6 +1,8 @@
 #include <iostream>
 #include <optional>
 
+#include "common.h"
+
 
 /**
  * Find index of value in array.
@@ -29,13 +31,11 @@ int main(int argc, char *argv[]) {
         return -1;
     } 
     int n = argc - 2;
-    int *arr = new int[n];
-    for (int i = 1; i < argc - 1; ++i)
-        arr[i] = atoi(argv[i]);
-    int value = atoi(argv[argc - 1]);
+    int *arr = cai(argv + 1, argc - 1);
+    int value = arr[argc - 2];
     auto index = binary_search(arr, 0, n, value);
     if (index.has_value())
-        std::cout << "Value: " << value << " is firstly met on " << index.value()  - 1<< "th position\n";
+        std::cout << "Value: " << value << " is found on " << index.value() << "th position\n";
     else
         std::cout << "Value: " << value << " not found.\n";
     return 0;
