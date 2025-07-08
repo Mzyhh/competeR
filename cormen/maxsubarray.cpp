@@ -3,7 +3,6 @@
 #include <limits.h>
 #include <vector>
 #include <numeric>
-#include <algorithm>
 #include <chrono>
 
 using namespace std;
@@ -14,6 +13,19 @@ using lli = long long int;
 #endif
 
 
+/**
+ * Find contiguous subarray consisting array[`mid`] with maximum sum.
+ *
+ * @param array Data.
+ * @param low Index of first element of target array.
+ * @param mid Index of middle element that should be in resulting subarray.
+ * @param high Index of last element of target array.
+ * @return tuple: (i, j, sum) where array[i..j] (inclusive) is the resulting
+ * subarray.
+ *
+ * Time complexity: O(n).
+ * Space complexity: O(1).
+ */
 tuple<size_t, size_t, lli> find_max_cross_subarray(const vector<int>& array,
                         const size_t low, const size_t mid, const size_t high){
     lli left_sum = LONG_LONG_MIN, right_sum = LONG_LONG_MIN;
@@ -36,6 +48,19 @@ tuple<size_t, size_t, lli> find_max_cross_subarray(const vector<int>& array,
 }
 
 
+/**
+ * Find contiguous subarray with the largest sum, using divide and conquer
+ * algorithm.
+ *
+ * @param array Data.
+ * @param low Index of first element of target array.
+ * @param high Index of last element of target array.
+ * @return tuple: (i, j, sum) where array[i..j] (inclusive) is the resulting
+ * subarray.
+ *
+ * Time complexity: O(n*log(n)).
+ * Space complexity: O(log(n)).
+ */
 tuple<size_t, size_t, lli> find_max_subarray(const vector<int>& array,
                                 const size_t low, const size_t high){
     if (low == high) return {low, high, array[low]};
@@ -48,6 +73,19 @@ tuple<size_t, size_t, lli> find_max_subarray(const vector<int>& array,
     return {l3, r3, s3};
 }
 
+
+/**
+ * Find contiguous subarray with the largest sum, using brutforce algorithm.
+ *
+ * @param array Data.
+ * @param low Index of first element of target array.
+ * @param high Index of last element of target array.
+ * @return tuple: (i, j, sum) where array[i..j] (inclusive) is the resulting
+ * subarray.
+ *
+ * Time complexity: O(n^2).
+ * Space complexity: O(1).
+ */
 tuple<size_t, size_t, lli> brutforce_max_subarray(const vector<int>& array,
                                 const size_t low, const size_t high) {
     size_t max_left, max_right;
@@ -68,6 +106,22 @@ tuple<size_t, size_t, lli> brutforce_max_subarray(const vector<int>& array,
 }
 
 #ifdef N
+/**
+ * Find contiguous subarray with the largest sum, using combination
+ * of divide&conquer and brutforce algorithms.
+ *
+ * N (macro-defined) is the maximum length of array that is given
+ * to brutforce algorithm. Depends on machine and architecture.
+ *
+ * @param array Data.
+ * @param low Index of first element of target array.
+ * @param high Index of last element of target array.
+ * @return tuple: (i, j, sum) where array[i..j] (inclusive) is the resulting
+ * subarray.
+ *
+ * Time complexity: O(n*log(n)).
+ * Space complexity: O(log(n)).
+ */
 tuple<size_t, size_t, lli> find_max_subarray_imp(const vector<int>& array,
                                 const size_t low, const size_t high){
     if (high - low + 1 <= N) 
@@ -82,6 +136,19 @@ tuple<size_t, size_t, lli> find_max_subarray_imp(const vector<int>& array,
 }
 #endif
 
+
+/**
+ * Find contiguous subarray with the largest sum, using Kadane algorithm.
+ *
+ * @param array Data.
+ * @param low Index of first element of target array.
+ * @param high Index of last element of target array.
+ * @return tuple: (i, j, sum) where array[i..j] (inclusive) is the resulting
+ * subarray.
+ *
+ * Time complexity: O(n).
+ * Space complexity: O(1).
+ */
 tuple<size_t, size_t, lli> find_max_subarray_kadane(const vector<int>& array,
                                 const size_t low, const size_t high) {
     lli cur_sum = 0, best_sum = 0;
