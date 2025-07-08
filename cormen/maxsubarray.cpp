@@ -10,7 +10,7 @@ using namespace std;
 using lli = long long int;
 
 #ifndef P
-#define P 10
+#define P 1
 #endif
 
 
@@ -82,6 +82,27 @@ tuple<size_t, size_t, lli> find_max_subarray_imp(const vector<int>& array,
 }
 #endif
 
+tuple<size_t, size_t, lli> find_max_subarray_kadane(const vector<int>& array,
+                                const size_t low, const size_t high) {
+    lli cur_sum = 0, best_sum = 0;
+    size_t cur_first = 0, cur_last = 0,
+           first = 0, last = 0;
+    for (size_t i = 0; i < array.size(); ++i) {
+        if (array[i] >= cur_sum + array[i]) {
+            cur_first = i;
+            cur_sum = array[i];
+        } else {
+            cur_sum += array[i];
+        }
+        cur_last = i;
+        if (cur_sum > best_sum) {
+            best_sum = cur_sum;
+            first = cur_first, last = cur_last;
+        }
+    }
+    return {first, last, best_sum};
+}
+
 
 int main(int argc, char* argv[]) {
     size_t n;
@@ -90,7 +111,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n; ++i) {
         cin >> a[i];
     }
-    lli t1 = 0, t2 = 0, t3 = 0; 
+    lli t1 = 0, t2 = 0, t3 = 0, t4 = 0;
     for (int _ = 0; _ < P; ++_) {
         auto begin_t = chrono::steady_clock::now();
         auto [l, r, s] = brutforce_max_subarray(a, 0, a.size() - 1);
@@ -114,7 +135,12 @@ int main(int argc, char* argv[]) {
         }
         #endif
 
-        if (l != l2 || r != r2 || s != s2) {
+        begin_t = chrono::steady_clock::now();
+        auto [l4, r4, s4] = find_max_subarray_kadane(a, 0, a.size() - 1);
+        end_t = chrono::steady_clock::now();
+        t4 += chrono::duration_cast<chrono::nanoseconds>(end_t - begin_t).count();
+
+        if (l != l2 || r != r2 || s != s2 || l != l4 || r != r4 || s != s4) {
             cout << "Hm.. Something went wrong.\n";
             return -1;
         }
@@ -130,5 +156,6 @@ int main(int argc, char* argv[]) {
     
     cout << "Brutforce time: " << t1 / P << endl;
     cout << "D&C time: " << t2 / P << endl;
+    cout << "Kadane time: " << t4 / P << endl;
     return 0;
 }
